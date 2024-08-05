@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <title>Connect Four</title>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+
+<body>
+  
+  <div class="connect-four">
+    <div class="board" id="board">
+      <!-- Grid cells will be added dynamically with JavaScript -->
+    </div>
+  </div>
+  <script src="script.js"></script>
+ 
+
+<script>
+ 
+  document.addEventListener('DOMContentLoaded', function () {
+    var urlParams = new URLSearchParams(window.location.search);
+    var idJogo = urlParams.get('id');
+    carregarTabuleiro(idJogo);
+    var board = document.getElementById('board');
+
+    // Adiciona evento de clique às células do tabuleiro
+    board.addEventListener('click', function (event) {
+      // Verifica se o clique foi em uma célula
+      if (event.target.classList.contains('grid-cell')) {
+        // Obtém o índice da coluna clicada
+        var colIndex = (Array.from(event.target.parentNode.children).indexOf(event.target)) % 7;
+        // Chama a função para enviar a requisição POST
+
+        enviarJogada(colIndex + 1, idJogo);
+        
+        setTimeout(() => {
+          jogadaIa(idJogo);
+        }, 1000);
+        
+        
+        // Agora, após o clique, você pode chamar a segunda função
+       
+      }
+      carregarTabuleiro(idJogo);
+      
+    });
+
+    function jogadaIa(idJogo){
+      //var url = 'https://b542abdeadf485402539e1309930a421.serveo.net/jogada';
+      var url = 'http://localhost:6798/jogadaIa';
+      var params ='idJogo=' + idJogo;
+
+      console.log("Esteve aqui");
+
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', url, true);
+      xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4) {
+          if (xhr.status == 200) {
+            // Aqui você pode lidar com a resposta da requisição, se necessário
+            // console.log(xhr.responseText);
+            // Após a jogada, recarrega o tabuleiro
+          } else if (xhr.status == 302) {
+            // Redirecionamento no lado do cliente
+            window.location.href = xhr.getResponseHeader('Location');
+          }
+        }
+        carregarTabuleiro(idJogo);
+      };
+
+      xhr.send(params);
+
+    }
+
+    // Função para enviar a requisição POST
+    function enviarJogada(coluna, idJogo) {
+      //var url = 'https://b542abdeadf485402539e1309930a421.serveo.net/jogada';
+      var url = 'http://localhost:6798/jogada';
+      var params = 'coluna=' + coluna + '&idJogo=' + idJogo;  
+
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', url, true);
+      xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+      xhr.onreadystatechange = function () {
+      if (xhr.readyState == 4) {
+        if (xhr.status == 200) {
+          // Aqui você pode lidar com a resposta da requisição, se necessário
+          // console.log(xhr.responseText);
+          // Após a jogada, recarrega o tabuleiro
+        } else if (xhr.status == 302) {
+          // Redirecionamento no lado do cliente
+          window.location.href = xhr.getResponseHeader('Location');
+        }
+      }
+      carregarTabuleiro(idJogo);
+    };
+
+      xhr.send(params);
+    }
+
+
+    function carregarTabuleiro(idJogo) {
+    $.ajax({
+        //url: 'https://b542abdeadf485402539e1309930a421.serveo.net/tabuleiro/' + idJogo,
+        url: 'http://localhost:6798/tabuleiro/' + idJogo,
+        method: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            var tabuleiro = data;
+
+            var htmlTabuleiro = '';
+            for (var i = 0; i < tabuleiro.length; i++) {
+                for (var j = 0; j < tabuleiro[i].length; j++) {
+                    var cellValue = tabuleiro[i][j];
+                    var cellClass = '';
+
+                    switch (cellValue) {
+                        case 0:
+                            cellClass = 'celulaNeutra';
+                            break;
+                        case 1:
+                            cellClass = 'celulaAzul';
+                            break;
+                        case 2:
+                            cellClass = 'celulaVermelha';
+                            break;
+                        default:
+                            // Lida com valores desconhecidos, se necessário
+                            break;
+                    }
+
+                    htmlTabuleiro += '<div class="grid-cell ' + cellClass + '">' + '</div>';
+                }
+                htmlTabuleiro += '</div>';
+            }
+
+            // Preenche o tabuleiro com o HTML gerado
+            $('#board').html(htmlTabuleiro);
+        },
+        error: function(error) {
+            console.error('Erro ao obter dados do servidor:', error);
+        }
+    });
+}
+
+  });
+</script>
+
+
+</body>
+
+</html>

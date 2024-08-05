@@ -1,0 +1,59 @@
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  margin: 0;
+  background-color: #f0f0f0;
+}
+
+.connect-four {
+  display: inline-block;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(7, 50px);
+  /* 7 columns */
+  grid-template-rows: repeat(6, 50px);
+  /* 6 rows */
+  gap: 5px;
+  /* gap between cells */
+  background-color: #3498db;
+  /* blue color */
+  border: 10px solid #2980b9;
+  /* Ajuste a espessura da borda conforme necessário */
+}
+
+/* Restante do seu CSS permanece inalterado */
+.board div {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  background-color: #3498db;
+  border: 1px solid #2980b9;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.board .grid-cell {
+  background-color: white;
+}
+
+.board .celulaVermelha{
+  background-color: rgb(238, 42, 42);
+}
+
+.board .celulaAzul{
+  background-color: rgb(78, 78, 190);
+}
+
+/* .board div:nth-child(8) {
+  background-color: red;
+  /* Outros estilos para a primeira célula
+}
+
+*/

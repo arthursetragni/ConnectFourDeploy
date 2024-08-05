@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Botão Começar</title>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        width: 100vw;
+        background-image: url('fundo.jpg');
+        background-size: cover;
+    }
+    
+    .container {
+        align-items: center;
+        background-color: white;
+        border-radius: 20px;
+        padding: 20px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+    }
+    
+    button {
+        background-color: blue;
+        color: white;
+        padding: 10px 20px;
+        font-size: 18px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        opacity: 0.7;
+        align-self: center;
+    }
+</style>
+</head>
+<body>
+
+<form id="formComecar" class="container">
+    <button id="local" type="button">Jogo Local</button>
+</br>
+</br>
+    <button id="ia" type="button">Jogar contra IA</button>
+</form>
+
+<script>
+document.getElementById('local').addEventListener('click', function() {
+    // Fazendo uma requisição GET para o backend
+    fetch('http://localhost:6798/comecar')
+    //fetch('https://b542abdeadf485402539e1309930a421.serveo.net/comecar')
+        .then(response => {
+            // Verificando se a resposta é bem sucedida (status 200)
+            if (response.ok) {
+                // Convertendo a resposta para JSON
+                return response.json();
+            } else {
+                // Caso contrário, lançar um erro
+                throw new Error('Erro ao obter dados do servidor');
+            }
+        })
+        .then(data => {
+            // Extrair o atributo 'id' do JSON de resposta
+            const id = data.id;
+            // Redirecionar para a página tabuleiro.html com o id como parâmetro
+            window.location.href = `tabuleiro.html?id=${id}`;
+        })
+        .catch(error => {
+            // Capturar e lidar com erros
+            console.error('Erro:', error);
+        });
+});
+
+document.getElementById('ia').addEventListener('click', function() {
+    // Fazendo uma requisição GET para o backend
+    fetch('http://localhost:6798/comecar')
+    //fetch('https://b542abdeadf485402539e1309930a421.serveo.net/comecar')
+        .then(response => {
+            // Verificando se a resposta é bem sucedida (status 200)
+            if (response.ok) {
+                // Convertendo a resposta para JSON
+                return response.json();
+            } else {
+                // Caso contrário, lançar um erro
+                throw new Error('Erro ao obter dados do servidor');
+            }
+        })
+        .then(data => {
+            // Extrair o atributo 'id' do JSON de resposta
+            const id = data.id;
+            // Redirecionar para a página tabuleiro.html com o id como parâmetro
+            window.location.href = `tabuleiroIa.html?id=${id}`;
+        })
+        .catch(error => {
+            // Capturar e lidar com erros
+            console.error('Erro:', error);
+        });
+});
+</script>
+
+</body>
+</html>
